@@ -16,10 +16,11 @@
 
 import AVFoundation
 import CoreVideo
-import MLKit
 import UIKit
 import SwiftUI
-
+import MLKitVision
+import MLKitCommon
+import MLKitPoseDetectionAccurate
 /// Defines UI-related utilitiy methods for vision detection.
 public class UIUtilities {
     

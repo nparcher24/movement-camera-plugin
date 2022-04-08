@@ -9,6 +9,11 @@ end
 
 target 'Plugin' do
   capacitor_pods
+  # If you want to use the base implementation:
+  pod 'GoogleMLKit/PoseDetection', '2.5.0'
+
+  # If you want to use the accurate implementation:
+  pod 'GoogleMLKit/PoseDetectionAccurate', '2.5.0'
 end
 
 target 'PluginTests' do

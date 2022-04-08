@@ -9,10 +9,16 @@ import Foundation
 import SwiftUI
 import UIKit
 import AVFoundation
-import MLKit
 import CoreVideo
+import MLKitCommon
+import MLKitVision
+import MLKitPoseDetectionCommon
+import MLKitPoseDetectionAccurate
 
 
+
+
+//@available(iOS 13.0, *)
 class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     var captureSession: AVCaptureSession?
     var frontCamera: AVCaptureDevice?
@@ -21,7 +27,7 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     var videoOutput = AVCaptureVideoDataOutput()
     var poseDetector: PoseDetector?
     var exerciseController: ExerciseController?
-    var inFrame: ExerciseView.InFrameStatus = .outOfFrame
+//    var inFrame: ExerciseView.InFrameStatus = .outOfFrame
     
     lazy var annotationOverlayView: UIView = {
 //        precondition(previewLayer?.isPreviewing != nil)
@@ -29,7 +35,6 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
       annotationOverlayView.translatesAutoresizingMaskIntoConstraints = false
       return annotationOverlayView
     }()
-    
     
     enum CameraControllerError: Swift.Error {
         case captureSessionAlreadyRunning
@@ -74,7 +79,6 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             
             try camera?.lockForConfiguration()
             camera?.unlockForConfiguration()
-            
         }
         
         func configureDeviceInputs() throws {
@@ -180,29 +184,34 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 //                print("Fallthrough")
                 fallthrough
             @unknown default:
-                if let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation {
-                    switch interfaceOrientation {
-                    case .portrait:
-//                        print("Portrait 2")
-                        videoOrientation = .portrait
-                    case .landscapeLeft:
-//                        print("Land Left 2")
-                        videoOrientation = .landscapeLeft
-                    case .landscapeRight:
-//                        print("Land Right 2")
-                        videoOrientation = .landscapeRight
-                    case .portraitUpsideDown:
-//                        print("Upside Down 2")
-                        videoOrientation = .portraitUpsideDown
-                    case .unknown:
-                        fallthrough
-                    @unknown default:
-//                        print("Unkown Unknown")
+                if #available(iOS 13.0, *) {
+                    if let interfaceOrientation = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.windowScene?.interfaceOrientation {
+                        switch interfaceOrientation {
+                        case .portrait:
+                            //                        print("Portrait 2")
+                            videoOrientation = .portrait
+                        case .landscapeLeft:
+                            //                        print("Land Left 2")
+                            videoOrientation = .landscapeLeft
+                        case .landscapeRight:
+                            //                        print("Land Right 2")
+                            videoOrientation = .landscapeRight
+                        case .portraitUpsideDown:
+                            //                        print("Upside Down 2")
+                            videoOrientation = .portraitUpsideDown
+                        case .unknown:
+                            fallthrough
+                        @unknown default:
+                            //                        print("Unkown Unknown")
+                            videoOrientation = .portrait
+                        }
+                    } else {
+                        print("ERROR in Orientation")
                         videoOrientation = .portrait
                     }
                 } else {
-                    print("ERROR in Orientation")
-                    videoOrientation = .portrait
+                    // Fallback on earlier versions
+                    videoOrientation = .landscapeLeft
                 }
             }
 
@@ -256,16 +265,16 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             // Pose detected. Currently, only single person detection is supported.
             results!.forEach { pose in
                 
-                var lineColor: UIColor = UIColor.white
+                let lineColor: UIColor = UIColor.white
                 
-                switch self.inFrame {
-                case .inFrame:
-                    lineColor = UIColor.green
-                case .outOfFrame:
-                    lineColor = UIColor.red
-                default:
-                    lineColor = UIColor.yellow
-                }
+//                switch self.inFrame {
+//                case .inFrame:
+//                    lineColor = UIColor.green
+//                case .outOfFrame:
+//                    lineColor = UIColor.red
+//                default:
+//                    lineColor = UIColor.yellow
+//                }
                 
                 let poseOverlayView = UIUtilities.createPoseOverlayViewWarriorU(
                     forPose: pose,
@@ -304,16 +313,16 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
             self.exerciseController?.handlePose(pose: detectedPoses!)
             
-            var lineColor: UIColor = UIColor.white
+            let lineColor: UIColor = UIColor.white
             
-            switch self.inFrame {
-            case .inFrame:
-                lineColor = UIColor.green
-            case .outOfFrame:
-                lineColor = UIColor.red
-            default:
-                lineColor = UIColor.yellow
-            }
+//            switch self.inFrame {
+//            case .inFrame:
+//                lineColor = UIColor.green
+//            case .outOfFrame:
+//                lineColor = UIColor.red
+//            default:
+//                lineColor = UIColor.yellow
+//            }
 
                 // Pose detected. Currently, only single person detection is supported.
                 detectedPoses!.forEach { pose in
