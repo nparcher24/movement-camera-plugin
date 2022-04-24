@@ -27,25 +27,28 @@ public class MCameraPlugin: CAPPlugin {
     private let implementation = MCamera()
     private var exerciseController = ExerciseController(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), delegate: nil, lineColor: "#ffffff")
     
-    @objc public func stopCamera() {
-        self.exerciseController.view.removeFromSuperview()
-        self.exerciseController.removeFromParent()
-        
+    @objc public func stopCamera(_ call: CAPPluginCall) {
+        print("STOP THE CAMERA")
+        DispatchQueue.main.async {
+            self.exerciseController.view.removeFromSuperview()
+            self.exerciseController.removeFromParent()
+        }
     }
     
     @objc func showCamera(_ call: CAPPluginCall) {
+        print("START THE CAMERA")
         
         guard let lineColor = call.options["lineColor"] as? String else {
             print("No Line Color passed")
+            
             return
           }
-        
-        self.exerciseController = ExerciseController(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), delegate: nil, lineColor: lineColor)
-        
+//        print("LINE COLOR IS: ", lineColor);
         
         DispatchQueue.main.async {
+            self.exerciseController = ExerciseController(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), delegate: self, lineColor: lineColor)
             self.exerciseController.previewView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-            self.exerciseController.exerciseDelegate = self
+//            self.exerciseController.exerciseDelegate = self
             self.webView?.superview?.addSubview(self.exerciseController.view)
             self.webView?.isOpaque = false
             self.webView?.backgroundColor = UIColor.clear
@@ -70,16 +73,29 @@ func hexStringFromColor(color: UIColor) -> String {
 extension MCameraPlugin: ExerciseControllerDelegate {
 
     func graphEmitted(pose: Pose) {
-        let encoder = JSONEncoder()
-
-        do {
-            let data = try encoder.encode(pose.landmarks)
+        if let rawDeviceAngle = self.exerciseController.motion.deviceMotion{
             
-            let ds = String(data: data, encoding: .utf8)
-            self.notifyListeners("posedetected", data: ["data": ds as Any]);
-//            self.notifyListeners("posedetected", data: ["data": "STOP IT"])
-        } catch {
-//            print("Error: \(error)")
+            let encoder = JSONEncoder()
+            do {
+                let data = try encoder.encode(pose.landmarks)
+                
+                let ds = String(data: data, encoding: .utf8)
+                self.notifyListeners("posedetected", data: ["data": ds as Any, "angle": deviceYAngle()]);
+            } catch {
+    //            print("Error: \(error)")
+            }
+            
+            func deviceYAngle() -> Float {
+               //Will return the angle going clockwise from the top of the phone against the vertical axis
+               let x = rawDeviceAngle.gravity.x
+               let y = rawDeviceAngle.gravity.y
+               let testAngle = atan2(y, x) + .pi / 2;           // in radians
+               var angleDegrees = testAngle * 180.0 / .pi;
+               if angleDegrees < 0 {
+                   angleDegrees = 360 + angleDegrees
+               }
+               return Float(angleDegrees)
+           }
         }
     }
 }
@@ -162,6 +178,8 @@ final class ExerciseController: UIViewController {
         self.cameraController = nil
 
     }
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
