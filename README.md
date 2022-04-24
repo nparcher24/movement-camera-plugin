@@ -13,52 +13,36 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`showCamera(...)`](#showcamera)
-* [`updateUI(...)`](#updateui)
+* [`stopCamera()`](#stopcamera)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
-
---------------------
-
-
 ### showCamera(...)
 
 ```typescript
-showCamera(options: { testValue: string; }) => void
+showCamera(options: { lineColor: string; }) => void
 ```
 
-| Param         | Type                                |
-| ------------- | ----------------------------------- |
-| **`options`** | <code>{ testValue: string; }</code> |
+Starts the ML Model, the camera, and displays it on the screen behind the ionic content
+
+| Param         | Type                                | Description                                                                                              |
+| ------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ lineColor: string; }</code> | - An options object that currently only includes: a hex color string for the lines to show on the screen |
 
 --------------------
 
 
-### updateUI(...)
+### stopCamera()
 
 ```typescript
-updateUI(data: { goodReps: number; time: number; badReps: number; }) => void
+stopCamera() => void
 ```
 
-| Param      | Type                                                              |
-| ---------- | ----------------------------------------------------------------- |
-| **`data`** | <code>{ goodReps: number; time: number; badReps: number; }</code> |
+Stops the camera from showing; deallocs the used memory and removes it from the native view stack
 
 --------------------
 

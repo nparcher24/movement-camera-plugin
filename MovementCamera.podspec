@@ -16,5 +16,6 @@ Pod::Spec.new do |s|
   s.dependency 'Capacitor'
   s.dependency 'GoogleMLKit/PoseDetection', '2.5.0'
   s.dependency 'GoogleMLKit/PoseDetectionAccurate', '2.5.0'
+  s.dependency 'MLKitXenoCommon'
   s.static_framework = true
 end

@@ -1,10 +1,10 @@
+////
+////  CameraClass.swift
+////  Temp Camera
+////
+////  Created by Nicholas Parrish on 5/19/21.
+////
 //
-//  CameraClass.swift
-//  Temp Camera
-//
-//  Created by Nicholas Parrish on 5/19/21.
-//
-
 import Foundation
 import SwiftUI
 import UIKit
@@ -20,6 +20,7 @@ import MLKitPoseDetectionAccurate
 
 //@available(iOS 13.0, *)
 class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+    var lineColor: String = "#ffffff"
     var captureSession: AVCaptureSession?
     var frontCamera: AVCaptureDevice?
     var frontCameraInput: AVCaptureDeviceInput?
@@ -35,6 +36,11 @@ class CameraController: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
       annotationOverlayView.translatesAutoresizingMaskIntoConstraints = false
       return annotationOverlayView
     }()
+    
+    convenience init(lineColor: String) {
+        self.init()
+        self.lineColor = lineColor
+    }
     
     enum CameraControllerError: Swift.Error {
         case captureSessionAlreadyRunning

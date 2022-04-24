@@ -5,11 +5,11 @@
 ////  Created by Nicholas Parrish on 6/1/21.
 ////
 //
-//import SwiftUI
-//import AVFoundation
-//
-//
-//
+import SwiftUI
+import AVFoundation
+
+
+
 //
 //
 //struct ExerciseView: View {
