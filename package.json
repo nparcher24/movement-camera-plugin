@@ -1,6 +1,6 @@
 {
   "name": "movement-camera",
-  "version": "0.0.15",
+  "version": "0.0.18",
   "description": "Google MLKit Pose implementation in Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -74,5 +74,11 @@
     "android": {
       "src": "android"
     }
+  },
+  "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1640029074",
+    "@mediapipe/drawing_utils": "^0.3.1620248257",
+    "@mediapipe/pose": "^0.5.1635988162",
+    "device-detector-js": "^3.0.3"
   }
 }
