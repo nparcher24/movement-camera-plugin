@@ -17,6 +17,7 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
   videoElement = document.getElementsByClassName('input_video')[0] as HTMLVideoElement;
   canvasElement = document.getElementsByClassName('output_canvas')[0] as HTMLCanvasElement;
   canvasCtx?: CanvasRenderingContext2D;
+  lineColor = "#ffffff"
 
   constructor() {
     super();
@@ -64,6 +65,7 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
 
   showCamera(options: { lineColor: string }): void {
     console.log("SHOW CAMERA, Options: ", options);
+    this.lineColor = options.lineColor
     // const elem = document.getElementById("camera-view")
     // if (elem) {
     //   //Remove the element
@@ -125,9 +127,9 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
 
     canvasCtx.globalCompositeOperation = 'source-over';
     drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
-      { color: '#ffffff', lineWidth: 2 });
+      { color: this.lineColor, lineWidth: 2 });
     drawLandmarks(canvasCtx, results.poseLandmarks,
-      { color: '#FFFFFF', lineWidth: 1 });
+      { color: this.lineColor, lineWidth: 1 });
     canvasCtx.restore();
   }
 
