@@ -1,7 +1,7 @@
 import { WebPlugin } from '@capacitor/core';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
-import type { Options } from '@mediapipe/pose';
+import type { Options, Results } from '@mediapipe/pose';
 import { Pose, POSE_CONNECTIONS } from '@mediapipe/pose';
 import DeviceDetector from 'device-detector-js';
 
@@ -36,7 +36,9 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
     this.pose.setOptions(options);
 
     this.pose.onResults((res) => {
-      this.onResults(res, this.canvasCtx)
+      if (this.canvasCtx) {
+        this.onResults(res, this.canvasCtx)
+      }
     });
   }
 
@@ -118,9 +120,26 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
     }
   }
 
-  onResults(results: any, canvasCtx: any): void {
+  onResults(results: Results, canvasCtx: CanvasRenderingContext2D): void {
 
-    // console.log("point: ", results.poseLandmarks)
+    const formattedReults = results.poseWorldLandmarks.map((val, ind) => {
+      return {
+        type: landmarkMap[ind],
+        position: {
+          x: val.x,
+          y: val.y,
+          z: val.z
+        },
+        inFrameLikelihood: val.visibility
+      }
+    })
+
+    const resultsObj = {
+      data: JSON.stringify(formattedReults), angle: -90
+    }
+
+
+    this.notifyListeners("posedetected", resultsObj)
 
     canvasCtx.save();
     canvasCtx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
@@ -134,3 +153,39 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
   }
 
 }
+
+const landmarkMap = [
+  'Nose',
+  'LeftEyeInner',
+  'LeftEye',
+  'LeftEyeOuter',
+  'RightEyeInner',
+  'RightEye',
+  'RightEyeOuter',
+  'LeftEar',
+  'RightEar',
+  'MouthLeft',
+  'MouthRight',
+  'LeftShoulder',
+  'RightShoulder',
+  'LeftElbow',
+  'RightElbow',
+  'LeftWrist',
+  'RightWrist',
+  'LeftPinkyFinger',
+  'RightPinkyFinger',
+  'LeftIndexFinger',
+  'RightIndexFinger',
+  'LeftThumb',
+  'RightThumb',
+  'LeftHip',
+  'RightHip',
+  'LeftKnee',
+  'RightKnee',
+  'LeftAnkle',
+  'RightAnkle',
+  'LeftHeel',
+  'RightHeel',
+  'LeftToe',
+  'RightToe',
+]
