@@ -135,7 +135,7 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
     })
 
     const resultsObj = {
-      data: JSON.stringify(formattedReults), angle: -90
+      data: JSON.stringify(formattedReults), angle: 90
     }
 
 
