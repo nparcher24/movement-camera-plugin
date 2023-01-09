@@ -1,4 +1,4 @@
-platform :ios, '12.0'
+platform :ios, '15.0'
 
 def capacitor_pods
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
@@ -10,13 +10,25 @@ end
 target 'Plugin' do
   capacitor_pods
   # If you want to use the base implementation:
-  pod 'GoogleMLKit/PoseDetection', '2.5.0'
+  pod 'GoogleMLKit/PoseDetection', '3.2.0'
 
   # If you want to use the accurate implementation:
-  pod 'GoogleMLKit/PoseDetectionAccurate', '2.5.0'
-  pod 'MLKitXenoCommon'
+  pod 'GoogleMLKit/PoseDetectionAccurate', '3.2.0'
+  #  pod 'MLKitXenoCommon'
 end
 
 target 'PluginTests' do
   capacitor_pods
+end
+
+post_install do |installer|
+
+  installer.pods_project.targets.each do |target|
+    if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+      target.build_configurations.each do |config|
+          config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
+    end
+  end
+
 end
