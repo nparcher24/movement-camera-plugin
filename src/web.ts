@@ -41,11 +41,14 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
     // });
   }
 
-  pose = new Pose({
-    locateFile: (file) => {
-      return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-    }
-  });
+  // pose = new Pose({
+  //   locateFile: (file) => {
+  //     return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+  //   }
+  // });
+
+  pose = new Pose({ locateFile: (file) => `assets/pose/${file}` });
+
 
   resizeAllTheThings(): void {
 
@@ -142,7 +145,7 @@ export class MCameraWeb extends WebPlugin implements MCameraPlugin {
       })
 
       const resultsObj = {
-        data: JSON.stringify(formattedReults), angle: 270
+        data: JSON.stringify(formattedReults), angle: 90
       }
 
 

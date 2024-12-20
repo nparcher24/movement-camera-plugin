@@ -10,10 +10,10 @@ end
 target 'Plugin' do
   capacitor_pods
   # If you want to use the base implementation:
-  pod 'GoogleMLKit/PoseDetection', '3.2.0'
+  pod 'GoogleMLKit/PoseDetection', '~>3.2.0'
 
   # If you want to use the accurate implementation:
-  pod 'GoogleMLKit/PoseDetectionAccurate', '3.2.0'
+  pod 'GoogleMLKit/PoseDetectionAccurate', '~>3.2.0'
   #  pod 'MLKitXenoCommon'
 end
 

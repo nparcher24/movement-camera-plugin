@@ -1,6 +1,6 @@
 {
   "name": "movement-camera",
-  "version": "0.0.52",
+  "version": "0.0.57",
   "description": "Google MLKit Pose implementation in Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
